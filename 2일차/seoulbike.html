@@ -22,6 +22,7 @@
             padding: 10px;
             border: 1px solid;
         }
+
         .bike {
             color: red;
         }
@@ -37,13 +38,13 @@
                 data: {},
                 success: function (response) {
                     let bike_list = response["rentBikeStatus"]["row"];
-                    for(let i = 0; i < bike_list.length; i++){
+                    for (let i = 0; i < bike_list.length; i++) {
                         let bike = bike_list[i];
                         let bike_gps = bike["stationName"];
                         let bike_cnt = bike["rackTotCnt"];
                         let bike_ncnt = bike["parkingBikeTotCnt"];
                         let temp_html;
-                        if(bike_ncnt < 5) {
+                        if (bike_ncnt < 5) {
                             temp_html = `<tr class = "bike"><td>${bike_gps}</td>
                             <td>${bike_cnt}</td>
                             <td>${bike_ncnt}</td></tr>`;
@@ -52,12 +53,14 @@
                             <td>${bike_cnt}</td>
                             <td>${bike_ncnt}</td></tr>`;
                         }
-                    
+
                         $('#names-q1').append(temp_html);
                     }
                 }
             })
+            alert('차차차');
         }
+        
     </script>
 
 </head>
