@@ -26,10 +26,10 @@
             data: {},
             success: function (response) {
                 console.log(response);
-                let img_url = response[" "]["url"];
-                // let cat_url = img_url["url"];
+                let img_url = response[0]["url"];
                 
-                jQuery('#img-cat').attr("src", "img_url");
+                
+                jQuery('#img-cat').attr("src", img_url);
             }
         })
       }
