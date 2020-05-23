@@ -51,15 +51,15 @@
     <script>
 
         $(document).ready(function () {
-            $('#world-m').empty();
+            
             $.ajax({
                 type: "GET",
                 url: "https://api.manana.kr/exchange/rate.json",
                 data: {},
                 success: function (response) {
                     let world_money = response[1]['rate'];
-                    let val_html = `<span>${world_money}</span>`
-                    $('#world-m').append(val_html);
+                    let val_html = `${world_money}`
+                    $('#world-m').text(val_html);
                 }
             })
         })
