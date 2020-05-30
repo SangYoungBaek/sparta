@@ -14,6 +14,7 @@ soup = BeautifulSoup(data.text, 'html.parser')
 songs = soup.select("#body-content > div.newest-list > div > table > tbody > tr")
 
 for song in songs:
+    # rank = song.select_one('td.number').split()
     rank = song.select_one('td.number').contents[0].strip()
     songTitle = song.select_one('td.info > a.title.ellipsis').text.strip()
     starName = song.select_one('td.info > a.artist.ellipsis').text

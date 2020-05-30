@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>4주차 원페이지 쇼핑몰</title>
+    <style>
+        .mytitle {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .wrap {
+            width: 600px;
+            margin: auto;
+        }
+
+        #SelectButton {
+            text-align: center;
+        }
+
+        * {
+            font-family: 'Gugi', cursive;
+        }
+
+        .info-temp {
+            color: blue;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Gugi&display=swap" rel="stylesheet">
+    <script>
+
+        function make_pay() {
+
+            let input_name = $('#input_name').val();
+            let input_num = $('#input_num').val();
+            let input_add = $('#input_add').val();
+            let input_pon = $('#input_pon').val();
+            if (input_name == '') {
+                alert('이름을 입력해주세요');
+                $('#input_name').focus();
+                return;
+            } else if (input_num == '--수량을 선택하세요--') {
+                alert('수량을 선택해주세요');
+                $('#input_num').focus();
+                return;
+            } else if (input_add == '') {
+                alert('주소를 입력해주세요');
+                $('#input_add').focus();
+                return;
+            } else if (input_pon == '') {
+                alert('번호를 입력해주세요');
+                $('#input_pon').focus();
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/pays",
+                data: { name_give: input_name, number_give: input_num, add_give: input_add, pon_give: input_pon },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
+                }
+            })
+
+        }
+
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "GET",
+                url: "https://api.manana.kr/exchange/rate.json",
+                data: {},
+                success: function (response) {
+                    let world_money = response[1]['rate'];
+                    let val_html = `${world_money}`
+                    $('#world-m').text(val_html);
+                }
+            })
+
+            $('#values-box').html('');
+            listing();
+        })
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/pays",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let pays = response['pays'];
+                        for (let i = 0; i < pays.length; i++) {
+                            make_table(pays[i]['name'], pays[i]['number'], pays[i]['add'], pays[i]['pon']);
+                        }
+                    } else {
+                        alert('주문정보를 받아오지 못했습니다');
+                    }
+                }
+            })
+        }
+        function make_table(name, number, add, pon) {
+            let temp_html = `<tr>
+                                <td>${name}</td>
+                                <td>${number}</td>
+                                <td>${add}</td>
+                                <td>${pon}</td>
+                            </tr>`;
+            $('#orders-box').append(temp_html);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="mytitle">
+            <img src="https://www.autodaily.co.kr/news/photo/201907/410373_41479_1632.png" class="img-fluid"
+                alt="Responsive image">
+        </div>
+        <div>
+            <h1>k7 팝니다 <span style="font-size: medium;"> 가격 : 30,000,000원/개</span></h1>
+            <p>이 자동차는 현대자동차에서 만든 고급 세단으로 k시리즈중 가장 최고로 치는 자동차입니다.
+                속도는 빠르지만 편안한 자동차입니다.
+            </p>
+        </div>
+        <div class="info-temp">
+            <p>달러-원 환율 : <span id="world-m"></span></p>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="order_name">주문자이름</span>
+            </div>
+            <input type="text" class="form-control" id="input_name" placeholder="" aria-label=""
+                aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">수량</label>
+            </div>
+            <select class="custom-select" id="input_num">
+                <option selected>--수량을 선택하세요--</option>
+                <option value="1">1대</option>
+                <option value="2">2대</option>
+                <option value="3">3대</option>
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="order_add">주소</span>
+            </div>
+            <input type="text" class="form-control" id="input_add" placeholder="" aria-label=""
+                aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="order_pon">전화번호</span>
+            </div>
+            <input type="text" class="form-control" id="input_pon" placeholder="" aria-label=""
+                aria-describedby="basic-addon1">
+        </div>
+        <div id="SelectButton">
+            <button onclick="make_pay()" type="button" class="btn btn-primary">주문하기</button>
+        </div>
+
+        <table class="table" id="orders-box">
+            <thead>
+                <tr>
+                    <th scope="col">이름</th>
+                    <th scope="col">수량</th>
+                    <th scope="col">주소</th>
+                    <th scope="col">전화번호</th>
+                </tr>
+                <tr id="values-box">
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
