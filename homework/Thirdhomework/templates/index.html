@@ -72,6 +72,10 @@
                 alert('번호를 입력해주세요');
                 $('#input_pon').focus();
                 return;
+            } else if (!(input_pon.split('-')[0] == '010' && (isNaN(input_pon.split('-')[1]) == false && input_pon.split('-')[1].length == 4) && (isNaN(input_pon.split('-')[2])) == false && input_pon.split('-')[2].length == 4)) {
+                alert('핸드폰 번호 형식을 지켜서 입력해주세요! ex) 010-0000-0000');
+                $('#input_pon').focus();
+                return;
             }
 
             $.ajax({
@@ -199,7 +203,7 @@
             </thead>
             <tbody>
                 <tr>
-                    
+
                 </tr>
 
             </tbody>
